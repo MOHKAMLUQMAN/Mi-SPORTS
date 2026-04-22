@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MI SPORTS Invoice</title>
+<style>
+body {
+    font-family: Arial;
+    background: #f5f5f5;
+}
+
+.container {
+    width: 800px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border: 2px solid black;
+}
+
+h1 {
+    text-align: center;
+    margin: 0;
+}
+h5 {
+    text-align: center;
+    margin: 0;
+}
+.top-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 6px;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    border: none;
+    text-align: center;
+}
+
+.summary {
+    width: 300px;
+    float: right;
+    margin-top: 20px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 8px 15px;
+}
+
+@media print {
+    button { display: none; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>MI SPORTS</h1>
+<h5>Dfance Road ,Fateh Garh ,Sialkot      Phone#03026380625</h5>
+<div class="top-info">
+    <div>
+        Date: <input type="date" id="date"><br>
+        Client: <input type="text" placeholder="Client Name">
+    </div>
+    <div>
+        Invoice No: <input type="text" id="invoice"><br>
+        Phone: <input type="text" placeholder="Phone">
+    </div>
+</div>
+
+<table id="table">
+<tr>
+    <th>#</th>
+    <th>Description</th>
+    <th>Qty</th>
+    <th>Rate</th>
+    <th>Total</th>
+</tr>
+</table>
+
+<button onclick="addRow()">+ Add Item</button>
+
+</table>
+<div class="summary">
+<table>
+<tr>
+    <td>Total</td>
+    <td id="subtotal">0</td>
+</tr>
+<tr>
+    <td>Advance</td>
+    <td><input type="number" id="advance" value="0" oninput="calculate()"></td>
+</tr>
+<tr>
+    <td>Discount</td>
+    <td><input type="number" id="discount" value="0" oninput="calculate()"></td>
+</tr>
+<tr>
+    <td><b>Balance</b></td>
+    <td id="balance"><b>0</b></td>
+</tr>
+</table>
+</div>
+
+<div style="clear: both;"></div>
+
+<button onclick="window.print()">Download / Print</button>
+
+<p style="text-align:center; margin-top:40px;">
+Thank you for your business and your trust. It is our pleasure  to work with you.
+</p>
+
+</div>
+
+<script>
+let rowCount = 0;
+
+function addRow() {
+    rowCount++;
+    let table = document.getElementById("table");
+
+    let row = table.insertRow();
+    row.innerHTML = `
+        <td>${rowCount}</td>
+        <td><input type="text"></td>
+        <td><input type="number" value="0" oninput="calculate()"></td>
+        <td><input type="number" value="0" oninput="calculate()"></td>
+        <td class="total">0</td>
+    `;
+}
+
+function calculate() {
+    let rows = document.querySelectorAll("#table tr");
+    let subtotal = 0;
+
+    rows.forEach((row, index) => {
+        if(index === 0) return;
+
+        let qty = row.cells[2].children[0].value;
+        let rate = row.cells[3].children[0].value;
+
+        let total = qty * rate;
+        row.cells[4].innerText = total;
+
+        subtotal += total;
+    });
+
+    document.getElementById("subtotal").innerText = subtotal;
+
+    let advance = document.getElementById("advance").value || 0;
+    let discount = document.getElementById("discount").value || 0;
+
+    let balance = subtotal - advance - discount;
+
+    document.getElementById("balance").innerText = balance;
+}
+
+// default 1 row
+addRow();
+</script>
+
+</body>
+</html>
